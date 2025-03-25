@@ -14,9 +14,11 @@ def get_banking_service(request: Request)->BankingService:
     """Dependency injection function to provide BankingService instance.
     
     Args:
+
         request (Request): The FastAPI request object containing app state
         
     Returns:
+
         BankingService: The banking service instance from app state
     """
     return request.app.state.banking_service
@@ -29,14 +31,19 @@ async def create_account(
     """Create a new bank account for a customer.
     
     Args:
+
         account (AccountCreate): The account creation request containing customer_id and initial_deposit
+
         service (BankingService): The banking service dependency
         
     Returns:
+
         APIResponse: Response containing the created account details
         
     Raises:
+    
         CustomerNotFoundException: If the customer_id doesn't exist
+
         ValueError: If initial_deposit has more than 2 decimal places.
     """
 
@@ -57,18 +64,26 @@ async def transfer_amount(
     """Execute a transfer between two accounts.
     
     Args:
-        transfer (TransferRequest): Transfer details including from_account_id, to_account_id, and amount
+
+        transfer (TransferRequest): Transfer details including from_account_id, to_account_id, and transfer_amount.
+
         service (BankingService): The banking service dependency
         
     Returns:
+
         APIResponse: Response containing the transfer details
         
     Raises:
+
         SelfTransferException: If from_account_id equals to_account_id
+
         AccountNotFoundException: If either account doesn't exist
+
         InsufficientFundsException: If source account has insufficient funds
+
         ValueError: If transfer_amount has more than 2 decimal places
     """
+
     if transfer.from_account_id == transfer.to_account_id:
         raise SelfTransferException()
     transfer_response = service.execute_transfer(transfer.from_account_id, transfer.to_account_id, transfer.transfer_amount)
@@ -87,15 +102,20 @@ async def get_balance(
     """Retrieve the current balance for a specific account.
     
     Args:
+
         account_id (str): The ID of the account to check
+
         service (BankingService): The banking service dependency
         
     Returns:
+
         APIResponse: Response containing the account ID and current balance
         
     Raises:
+
         AccountNotFoundException: If the account_id doesn't exist
     """
+
     balance = service.get_balance(account_id)
     balance_response = {
         "account_id": account_id,
@@ -116,13 +136,17 @@ async def get_transfer_history(
     """Retrieve the transfer history for a specific account.
     
     Args:
+
         account_id (str): The ID of the account to get transfer history for
+
         service (BankingService): The banking service dependency
         
     Returns:
+
         APIResponse: Response containing the list of transfers
         
     Raises:
+
         AccountNotFoundException: If the account_id doesn't exist
     """
 
