@@ -11,7 +11,17 @@ Transfer amounts between any two accounts (same or different customers).
 Retrieve account balances.
 Retrieve transfer history for an account.
 
-Built within a time constraint (4-5 hours), this is a prototype with an in-memory database and basic features, tested thoroughly but not fully production-ready. See details.
+Built within a time constraint (4-5 hours), this is a prototype with an in-memory database and basic features, tested thoroughly but not fully production-ready. [Check Here.](#production-readiness-gaps).
+
+## Architecture
+The application follows a layered design:
+
+ - Routers (routers/routes.py): Define API endpoints using FastAPI.
+ - Services (services/banking.py): Encapsulate business logic (e.g., transfer validation, balance updates).
+ - Models (models/banking.py): Pydantic schemas for request/response validation.
+ - Database (database/db.py): In-memory storage with thread-safe operations.
+ - Utils (utils/): Custom exceptions and handlers for error management.
+ - Interaction: Requests hit endpoints, which delegate to the BankingService (injected via dependency), interacting with the in-memory DB.
 
 ## Project Structure
 ```bash
@@ -198,11 +208,12 @@ Due to the time constraint, this project makes compromises for simplicity, logic
  - Fix: Use a distributed DB and deploy with a load balancer.
 
 ### Design Choices
- - FastAPI: Chosen for its async support, auto-generated docs, and Pydantic integration.
- - In-Memory DB: Used to meet the 4-hour limit.
- - Pydantic Models: Enforce strict validation (e.g., 2-decimal precision) and provide clear schemas.
- - Testing: Comprehensive pytest suite ensures reliability within scope.
- - Docker: Added for easy deployment and out-of-box testing reproducibility.
+ - FastAPI: Selected for its async capabilities, auto-generated Swagger UI, and Pydantic integration, enabling rapid 
+ - development and built-in documentation within 4 hours.
+ - In-Memory DB: Chosen to avoid complex DB setup, prioritizing functional endpoints and testing within the time limit.
+ - Pydantic Models: Used for strict input validation (e.g., 2-decimal precision) and clear API schemas, reducing errors.
+ - Testing: Comprehensive pytest suite ensures reliability, leveraging pytest-asyncio for async endpoints.
+ - Docker: Included for reproducible deployment and testing, enhancing out-of-the-box usability despite time constraints.
 
 ### Note:
 This is a prototype assignment. For production use, address the gaps above to enhance functionality.
