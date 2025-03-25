@@ -11,7 +11,7 @@ Transfer amounts between any two accounts (same or different customers).
 Retrieve account balances.
 Retrieve transfer history for an account.
 
-Built within a time constraint (4-5 hours), this is a prototype with an in-memory database and basic features, tested thoroughly but not fully production-ready. [Check Here.](#production-readiness-gaps).
+Built within a time constraint (4-5 hours), this is a prototype with an in-memory database and basic features, tested thoroughly but not fully production-ready. [Check Here.](#production-readiness-gaps)
 
 ## Architecture
 The application follows a layered design:
