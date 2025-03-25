@@ -2,7 +2,7 @@ from typing import List, Optional
 import uuid
 import logging
 from threading import Lock
-from app.models.banking import Transfer
+from app.models.schemas import Transfer
 from app.database.seed_data import CUSTOMERS, ACCOUNTS, TRANSFERS
 from app.utils.exceptions import AccountNotFoundException
 

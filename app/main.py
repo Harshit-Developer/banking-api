@@ -1,12 +1,12 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from app.routers import banking
+from app.routers.routes import router
 from app.database.db import Database
 import logging
 from dotenv import load_dotenv
 import os
 
-from app.services.banking import BankingService
+from app.services.banking_service import BankingService
 from app.utils.exception_handler import AccountNotFoundExceptionHandler, CustomerNotFoundExceptionHandler, InsufficientFundsExceptionHandler, SelfTransferExceptionHandler
 from app.utils.exceptions import AccountNotFoundException, CustomerNotFoundException, InsufficientFundsException, SelfTransferException
 
@@ -36,5 +36,5 @@ app.add_exception_handler(InsufficientFundsException,InsufficientFundsExceptionH
 app.add_exception_handler(SelfTransferException,SelfTransferExceptionHandler)
 
 
-app.include_router(banking.router)
+app.include_router(router)
 
