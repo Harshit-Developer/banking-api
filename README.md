@@ -1,71 +1,208 @@
-### Objective
+## Banking API
 
-Your assignment is to build an internal API for a fake financial institution using Python and any framework  except Django and Litestar.
+An internal HTTP API for a fake financial institution, built with Python and FastAPI. This project provides basic banking functionality, including account creation, transfers, balance retrieval, and transfer history.
 
-### Brief
+## Project Overview
 
-While modern banks have evolved to serve a plethora of functions, at their core, banks must provide certain basic features. Today, your task is to build the basic HTTP API for one of those banks! Imagine you are designing a backend API for bank employees. It could ultimately be consumed by multiple frontends (web, iOS, Android etc).
+This API is designed to serve as a backend for financial institutions and is consumable by multiple frontends (web, iOS, Android, etc.). It fulfills the following core requirements:
 
-### Important
-We do not expect you to work more than 4 hours on this case challenge and we acknowledge not everything can be implemented in a production ready manner. You can choose where to use a mock/stub vs. where you focus on the implementation. If you have to make compromises, please list in your documentation what needs to be done to make it production ready. 
+Create bank accounts with initial deposits for customers.
+Transfer amounts between any two accounts (same or different customers).
+Retrieve account balances.
+Retrieve transfer history for an account.
 
-### Tasks
+Built within a time constraint (4-5 hours), this is a prototype with an in-memory database and basic features, tested thoroughly but not fully production-ready. See details.
 
-- Implement assignment using:
-  - Language: **Python**
-  - Framework: **any framework except Django and Litestar** 
-- There should be API routes that allow them to:
-  - Create a new bank account for a customer, with an initial deposit amount. A
-    single customer may have multiple bank accounts.
-  - Transfer amounts between any two accounts, including those owned by
-    different customers.
-  - Retrieve balances for a given account.
-  - Retrieve transfer history for a given account.
-- Write tests for your business logic
+## Project Structure
+```bash
+banking-api/
+├── app/
+│   ├── __init__.py
+│   ├── main.py              # FastAPI app setup
+│   ├── database/           # In-memory DB and seed data
+│   ├── models/             # Pydantic models
+│   ├── routers/            # API endpoints
+│   ├── services/           # Business logic
+│   ├── tests/              # Unit tests
+│   ├── utils/              # Exceptions and handlers
+├── tests.py                # Test suite
+├── requirements.txt        # Dependencies
+├── Dockerfile              # Runtime container
+├── Dockerfile.test         # Test container
+└── README.md               # This file
+````
+## Setup Instructions
 
-Feel free to pre-populate your customers with the following:
+### Prerequisites
 
+- Python 3.11+
+- Docker (optional, for containerized setup/testing)
+- Git
+
+### Local Setup
+- Clone the Repository
+```bash
+git clone https://github.com/your-repo.git
+cd banking-api
+````
+- Create a Virtual Environment
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+````
+- Install Dependencies
+```bash
+pip install -r requirements.txt
+````
+- Run the Application
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+````
+- Local Testing
+```bash
+pytest tests.py -v
+````
+  - Access the API at http://localhost:8000
+  - Interactive API docs (Swagger UI) are available at http://localhost:8000/docs.
+
+
+## Docker Setup ( Optional. You should have docker installed for this setup)
+- Build and Run the Container
+```bash
+docker build -t banking-api .
+docker run -d -p 8000:8000 --name banking-api banking-api
+````
+- Run Tests in Docker
+```bash
+docker build -f Dockerfile.test -t banking-api-test .
+docker run --rm banking-api-test
+````
+## API Endpoints
+### Create a New Account
+- Endpoint: POST /api/v1/accounts
+- Example Request Body:
 ```json
-[
-  {
-    "id": 1,
-    "name": "Arisha Barron"
-  },
-  {
-    "id": 2,
-    "name": "Branden Gibson"
-  },
-  {
-    "id": 3,
-    "name": "Rhonda Church"
-  },
-  {
-    "id": 4,
-    "name": "Georgina Hazel"
-  }
-]
-```
+{
+  "customer_id": 1,
+  "initial_deposit": 100.50
+}
+````
+- Response (201 Created):
+```json
+{
+    "status": "success",
+    "data": {
+        "account_id": "acc-7cd76af5",
+        "customer_id": 1,
+        "balance": 100.50
+    },
+    "message": "Account created successfully",
+    "error_code": null,
+    "timestamp": "2025-03-25T20:55:31.112236Z"
+}
+````
+### Transfer Amounts
+- Endpoint: POST POST /api/v1/transfers
+- Example Request Body:
+```json
+{
+  "from_account_id": "acc-abc12345",
+  "to_account_id": "acc-def67890",
+  "transfer_amount": 50.00
+}
+````
+- Response (200 OK):
+```json
+{
+    "status": "success",
+    "data": {
+        "transaction_id": "ccf78070-511a-40a4-a634-384b68c08fb1",
+        "from_account_id": "acc-abc12345",
+        "to_account_id": "acc-def67890",
+        "transfer_amount": 100.0,
+        "timestamp": "2025-03-25T20:56:42.463262"
+    },
+    "message": "Transfer executed successfully",
+    "error_code": null,
+    "timestamp": "2025-03-25T20:56:42.463453Z"
+}
+````
+### Retrieve Balance
+- Endpoint: GET /api/v1/accounts/{account_id}/balance
+- Example: GET /api/v1/accounts/acc1-1234/balance
+- Response (200 OK):
+```json
+{
+    "status": "success",
+    "data": {
+        "account_id": "acc1-1234",
+        "current_balance": 1000.0
+    },
+    "message": "Account balance retrieved successfully",
+    "error_code": null,
+    "timestamp": "2025-03-25T22:26:22.185432Z"
+}
+````
+### Retrieve Transfer History
+- Endpoint: GET /api/v1/accounts/{account_id}/transfers
+- Example: GET /api/v1/accounts/acc1-1234/transfers
+- Response (200 OK):
+```json
+{
+    "status": "success",
+    "data": [
+        {
+            "transaction_id": "txn1-1111",
+            "from_account_id": "acc1-1234",
+            "to_account_id": "acc2-5678",
+            "transfer_amount": 200.0,
+            "timestamp": "2025-03-23T10:00:00"
+        }
+    ],
+    "message": "Transaction History retrieved successfully",
+    "error_code": null,
+    "timestamp": "2025-03-25T22:27:53.379071Z"
+}
+````
+## Production Readiness Gaps
+Due to the time constraint, this project makes compromises for simplicity, logic implementation, and functional implementations. Below are the gaps and steps to make it production-ready:
 
-You are expected to design any other required models and routes for your API.
+1. In-Memory Database
+ - Current: Uses an in-memory dictionary with a Lock for thread safety.
+ - Gap: No persistence; data is lost on restart.
+ - Fix: Replace with a database (e.g., PostgreSQL) using SQLAlchemy for persistence and scalability.
 
-### Evaluation Criteria
+2. Authentication and Authorization:
+ - Current: No access control; anyone can use the API.
+ - Gap: Internal APIs require employee authentication.
+ - Fix: Implement OAuth2 or JWT to restrict access to authenticated users.
 
-- **Python** best practices
-- Completeness: did you complete the features?
-- Correctness: does the functionality act in sensible, thought-out ways?
-- Maintainability: is it written in a clean, maintainable way?
-- Production readiness: is there a clear path towards taking the prototype into production?
-- Testing: 
-   - Is the system adequately tested?
-   - Can the application be installed and tested out of the box by the reviewer?
-- Documentation:
-   - is the API well-documented?
-   - are design choices well-explained?
+3. Transaction Safety:
+ - Current: Transfers use a Lock for in-memory consistency, but not true ACID transactions.
+ - Gap: Risk of partial updates in a real DB without transaction support.
+ - Fix: Use database transactions in execute_transfer to ensure atomicity (e.g., rollback on failure).
 
-### CodeSubmit
+4. Security:
+ - Current: Basic input validation via Pydantic, but no rate limiting.
+ - Gap: Vulnerable to abuse (e.g., DDoS).
+ - Fix: Add rate limiting (e.g., slowapi).
 
-Please organize, design, test and document your code as if it were going into production - then push your changes to the master branch. After you have pushed your code, you may submit the assignment on the assignment page.
+5. Monitoring and Logging:
+ - Current: Basic logging to console.
+ - Gap: No centralized logging or monitoring for production issues.
+ - Fix: Integrate with a logging service (e.g., Prometheus + Grafana) and add a /health endpoint for monitoring.
+   
+ 6. Scalability:
+ - Current: Single-threaded in-memory DB limits concurrent users.
+ - Gap: Won’t scale to real-world banking loads.
+ - Fix: Use a distributed DB and deploy with a load balancer.
 
-All the best and happy coding,
+### Design Choices
+ - FastAPI: Chosen for its async support, auto-generated docs, and Pydantic integration.
+ - In-Memory DB: Used to meet the 4-hour limit.
+ - Pydantic Models: Enforce strict validation (e.g., 2-decimal precision) and provide clear schemas.
+ - Testing: Comprehensive pytest suite ensures reliability within scope.
+ - Docker: Added for easy deployment and out-of-box testing reproducibility.
 
-The Entrix Team
+### Note:
+This is a prototype assignment. For production use, address the gaps above to enhance functionality.
