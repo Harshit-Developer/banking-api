@@ -86,7 +86,7 @@ pytest tests.py -v
 ## Docker Setup ( Optional. You should have docker installed for this setup)
 - Build and Run the Container
 ```bash
-docker build -t banking-api.
+docker build -t banking-api .
 docker run -d -p 8000:8000 --name banking-api -e LOG_LEVEL=INFO banking-api
 ````
 - Run Tests in Docker
