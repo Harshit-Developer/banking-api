@@ -9,11 +9,11 @@ CUSTOMERS = {
 }
 
 ACCOUNTS = {
-    "acc1-1234": {"id": "acc1-1234", "customer_id": 1, "balance": 1000.00},
-    "acc2-5678": {"id": "acc2-5678", "customer_id": 2, "balance": 500.00},
-    "acc3-9012": {"id": "acc3-9012", "customer_id": 3, "balance": 750.50},
-    "acc4-3456": {"id": "acc4-3456", "customer_id": 4, "balance": 2000.75},
-    "acc5-7890": {"id": "acc5-7890", "customer_id": 1, "balance": 250.00},  
+    "acc1-1234": {"account_id": "acc1-1234", "customer_id": 1, "balance": 1000.00},
+    "acc2-5678": {"account_id": "acc2-5678", "customer_id": 2, "balance": 500.00},
+    "acc3-9012": {"account_id": "acc3-9012", "customer_id": 3, "balance": 750.50},
+    "acc4-3456": {"account_id": "acc4-3456", "customer_id": 4, "balance": 2000.75},
+    "acc5-7890": {"account_id": "acc5-7890", "customer_id": 1, "balance": 250.00},  
 }
 
 TRANSFERS = [
