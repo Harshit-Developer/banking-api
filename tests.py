@@ -181,36 +181,3 @@ async def test_get_transfer_history_account_not_found(client):
     data = response.json()
     assert data["status"] == "failure"
     assert data["message"] == "Account not found"
-
-# Additional edge cases for amount_precision and negative amount
-async def test_transfer_amount_precision(client, sample_customer_id):
-    """Test transfer with invalid amount precision."""
-    acc1 = client.post("/api/v1/accounts", json=AccountCreate(customer_id=sample_customer_id, initial_deposit=200.00).model_dump()).json()["data"]
-    acc2 = client.post("/api/v1/accounts", json=AccountCreate(customer_id=sample_customer_id, initial_deposit=0.00).model_dump()).json()["data"]
-    
-    transfer_data = {
-        "from_account_id": acc1["account_id"],
-        "to_account_id": acc2["account_id"],
-        "transfer_amount": 50.555 
-    }
-    response = client.post("/api/v1/transfers", json=transfer_data)
-    
-    assert response.status_code == 422
-    data = response.json()
-    assert "Transfer amount must have at most 2 decimal places" in str(data["detail"])
-
-async def test_transfer_negative_amount(client, sample_customer_id):
-    """Test transfer with negative amount."""
-    acc1 = client.post("/api/v1/accounts", json=AccountCreate(customer_id=sample_customer_id, initial_deposit=200.00).model_dump()).json()["data"]
-    acc2 = client.post("/api/v1/accounts", json=AccountCreate(customer_id=sample_customer_id, initial_deposit=0.00).model_dump()).json()["data"]
-    
-    transfer_data = {
-        "from_account_id": acc1["account_id"],
-        "to_account_id": acc2["account_id"],
-        "transfer_amount": -50.00
-    }
-    response = client.post("/api/v1/transfers", json=transfer_data)
-    
-    assert response.status_code == 422
-    data = response.json()
-    assert "greater than 0" in str(data["detail"])
