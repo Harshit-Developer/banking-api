@@ -67,7 +67,7 @@ pip install -r requirements.txt
 ````
 - (Optional) Configure Environment Variables:
  ```bash
-cp .env.example .env
+cp .env.example .env   # On windows:- copy .env.example .env
 ````
   - Edit .env if desired (e.g., LOG_LEVEL=DEBUG). Defaults to INFO if omitted.
 
