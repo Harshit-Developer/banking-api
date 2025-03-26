@@ -2,8 +2,8 @@ import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from app.database.db import Database
-from app.services.banking import BankingService
-from app.models.banking import AccountCreate, TransferRequest
+from app.services.banking_service import BankingService
+from app.models.schemas import AccountCreate, TransferRequest
 
 # Use pytest-asyncio for async tests
 pytestmark = pytest.mark.asyncio

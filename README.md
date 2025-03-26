@@ -25,21 +25,22 @@ The application follows a layered design:
 
 ## Project Structure
 ```bash
-banking-api/
+banking-api-tvkcba/
 ├── app/
 │   ├── __init__.py
-│   ├── main.py              # FastAPI app setup
-│   ├── database/           # In-memory DB and seed data
-│   ├── models/             # Pydantic models
-│   ├── routers/            # API endpoints
-│   ├── services/           # Business logic
-│   ├── tests/              # Unit tests
-│   ├── utils/              # Exceptions and handlers
-├── tests.py                # Test suite
-├── requirements.txt        # Dependencies
-├── Dockerfile              # Runtime container
-├── Dockerfile.test         # Test container
-└── README.md               # This file
+│   ├── main.py              # FastAPI app setup and lifecycle management
+│   ├── database/           # In-memory DB and pre-populated seed data
+│   ├── models/             # Pydantic schemas (schemas.py)
+│   ├── routers/            # API endpoint definitions (routes.py)
+│   ├── services/           # Business logic implementation (service.py)
+│   ├── tests/              # Unit tests (mirrored in tests.py)
+│   ├── utils/              # Custom exceptions and handlers
+├── tests.py                # Comprehensive test suite
+├── requirements.txt        # Python dependencies
+├── Dockerfile              # Runtime container configuration
+├── Dockerfile.test         # Test container configuration
+├── .env.example            # Example environment variables
+└── README.md               # This documentation
 ````
 ## Setup Instructions
 
@@ -52,8 +53,8 @@ banking-api/
 ### Local Setup
 - Clone the Repository
 ```bash
-git clone https://github.com/your-repo.git
-cd banking-api
+git clone http://entrix-wpgiyt@git.codesubmit.io/entrix/banking-api-tvkcba
+cd banking-api-tvkcba
 ````
 - Create a Virtual Environment
 ```bash
@@ -64,6 +65,12 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ````
+- (Optional) Configure Environment Variables:
+ ```bash
+cp .env.example .env
+````
+  - Edit .env if desired (e.g., LOG_LEVEL=DEBUG). Defaults to INFO if omitted.
+
 - Run the Application
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
@@ -79,8 +86,8 @@ pytest tests.py -v
 ## Docker Setup ( Optional. You should have docker installed for this setup)
 - Build and Run the Container
 ```bash
-docker build -t banking-api .
-docker run -d -p 8000:8000 --name banking-api banking-api
+docker build -t banking-api.
+docker run -d -p 8000:8000 --name banking-api -e LOG_LEVEL=INFO banking-api
 ````
 - Run Tests in Docker
 ```bash
@@ -174,6 +181,14 @@ docker run --rm banking-api-test
     "timestamp": "2025-03-25T22:27:53.379071Z"
 }
 ````
+
+## Environment Variables
+The app uses environment variables for configuration, loaded via python-dotenv. See .env.example:
+
+ - LOG_LEVEL: Logging level (e.g., INFO, DEBUG). Defaults to INFO if unset.
+ - Local: Set via .env file.
+ - Docker: Pass via -e flag (e.g., -e LOG_LEVEL=DEBUG).
+
 ## Production Readiness Gaps
 Due to the time constraint, this project makes compromises for simplicity, logic implementation, and functional implementations. Below are the gaps and steps to make it production-ready:
 

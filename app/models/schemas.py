@@ -13,7 +13,7 @@ class Customer(BaseModel):
 class AccountCreate(BaseModel):
     """Model for creating a new bank account."""
     customer_id: int 
-    initial_deposit: float 
+    initial_deposit: float = Field(gt=0, le=1_000_000, description="Initial deposit amount must be between 0 and 1000000")
 
     
     @field_validator("initial_deposit")
