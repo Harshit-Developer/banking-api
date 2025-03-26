@@ -17,9 +17,9 @@ Built within a time constraint (4-5 hours), this is a prototype with an in-memor
 The application follows a layered design:
 
  - Routers (routers/routes.py): Define API endpoints using FastAPI.
- - Services (services/banking.py): Encapsulate business logic (e.g., transfer validation, balance updates).
- - Models (models/banking.py): Pydantic schemas for request/response validation.
- - Database (database/db.py): In-memory storage with thread-safe operations.
+ - Services (services/banking_services.py): Encapsulate business logic (e.g., transfer validation, balance updates).
+ - Models (models/schemas.py): Pydantic schemas for request/response validation.
+ - Database (database/): In-memory storage with thread-safe operations and db handler to mock db operations.
  - Utils (utils/): Custom exceptions and handlers for error management.
  - Interaction: Requests hit endpoints, which delegate to the BankingService (injected via dependency), interacting with the in-memory DB.
 
@@ -94,6 +94,33 @@ docker run -d -p 8000:8000 --name banking-api -e LOG_LEVEL=INFO banking-api
 docker build -f Dockerfile.test -t banking-api-test .
 docker run --rm banking-api-test
 ````
+## Pre-populated Data
+
+The API uses an in-memory database pre-loaded with the following data for testing endpoints:
+
+### Customers
+| Customer ID | Name            | Email                |
+|-------------|-----------------|----------------------|
+| 1           | Arisha Barron   | Arisha@dummy.com     |
+| 2           | Branden Gibson  | Branden@dummy.com    |
+| 3           | Rhonda Church   | Rhonda@dummy.com     |
+| 4           | Georgina Hazel  | Georgina@dummy.com   |
+
+
+ ### ACCOUNTS
+| ACCOUNT ID  | Customer ID     | Balance              |
+|-------------|-----------------|----------------------|
+| acc1-1234   | 1               | 1000.00              |
+| acc2-5678   | 2               | 500.00               |
+| acc3-9012   | 3               | 750.50               |
+| acc4-3456   | 4               | 200.75               |
+| cc5-7890    | 1               | 250.50               |
+
+ ### TRANSFERS
+| Transaction ID | From Account ID | To Account ID | Amount | Timestamp            |
+|----------------|-----------------|---------------|--------|----------------------|
+| txn1-1111      | acc1-1234       | acc2-5678     | 200.00 | 2025-03-23T10:00:00  |
+  
 ## API Endpoints
 ### Create a New Account
 - Endpoint: POST /api/v1/accounts
